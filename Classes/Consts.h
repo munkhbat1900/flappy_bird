@@ -21,5 +21,6 @@ enum class kZOrder {
 
 const std::string BACKGROUND_FILENAME = "lv1_background.png";
 const std::string BACKGROUND_GROUND_FILENAME = "lv1_background_ground.png";
+const std::string PLAY_BUTTON_FILENAME = "lv1_button_start.png";
 
 #endif

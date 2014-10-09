@@ -29,7 +29,7 @@ void GroundSprite::initGround() {
 void GroundSprite::update(float delta) {
     Vec2 position = this->getPosition();
     this->setPosition(Vec2(position.x - speed * delta, position.y));
-    CCLOG("x = %f, y = %f", position.x - speed * delta, speed * delta);
+    //CCLOG("x = %f, y = %f", position.x - speed * delta, speed * delta);
 }
 
 float GroundSprite::getXPosition() {

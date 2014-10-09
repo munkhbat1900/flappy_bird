@@ -65,12 +65,27 @@ void GameStartScene::constructBackGround() {
     this->addChild(backgroundGoundSprite1, static_cast<int>(kZOrder::kBackground), static_cast<int>(kTag::kBackgroundGround));
     groundVector.pushBack(backgroundGoundSprite1);
     
-    // right end of first ground sprite
-    float rightEdgeX = backgroundGoundSprite1->getBoundingBox().getMaxX();
+    float rightEdgeX = backgroundGoundSprite1->getBoundingBox().getMaxX();  // right end of first ground sprite
     
     GroundSprite* backgroundGoundSprite2 = GroundSprite::createGround();
     backgroundGoundSprite2->setPosition(Vec2(rightEdgeX + visibleSize.width / 2, visibleSize.height / 10));
     this->addChild(backgroundGoundSprite2, static_cast<int>(kZOrder::kBackground), static_cast<int>(kTag::kBackgroundGround));
     groundVector.pushBack(backgroundGoundSprite2);
     
+    // add play button
+    MenuItemImage* startItem = MenuItemImage::create(PLAY_BUTTON_FILENAME,
+                                                     PLAY_BUTTON_FILENAME,
+                                                     CC_CALLBACK_1(GameStartScene::onStartTap, this));
+    
+    float groundTopY = backgroundGoundSprite1->getBoundingBox().getMaxY();
+    float startItemHeight = startItem->getBoundingBox().getMaxY() - startItem->getBoundingBox().getMinY();
+    startItem->setPosition(Vec2(visibleSize.width / 2, groundTopY + startItemHeight / 2));
+    
+    auto menu = Menu::create(startItem, nullptr);
+    menu->setPosition(Vec2::ZERO);
+    addChild(menu);
+}
+
+void GameStartScene::onStartTap(cocos2d::Ref *sender) {
+    CCLOG("start tap");
 }

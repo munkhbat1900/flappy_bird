@@ -14,6 +14,9 @@ private:
     // ground vector
     cocos2d::Vector<GroundSprite*> groundVector;
     
+    // start button tap event
+    void onStartTap(Ref* sender);
+    
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();
