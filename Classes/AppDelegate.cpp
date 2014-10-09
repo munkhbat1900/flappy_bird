@@ -25,6 +25,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0 / 60);
+    
+    // set resolution
+    Size frameSize = glview->getFrameSize();
+    
+    director->setContentScaleFactor(MIN(288 / frameSize.width, 512 / frameSize.height));
 
     // create a scene. it's an autorelease object
     auto scene = GameStartScene::createScene();

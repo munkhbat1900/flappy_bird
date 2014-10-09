@@ -1,4 +1,5 @@
 #include "GameStartScene.h"
+#include "Consts.h"
 
 USING_NS_CC;
 
@@ -27,5 +28,29 @@ bool GameStartScene::init()
         return false;
     }
     
+    constructBackGround();
+    
+    scheduleUpdate();
+    
     return true;
+}
+
+void GameStartScene::update(float delta) {
+    // move ground
+    
+}
+
+void GameStartScene::constructBackGround() {
+    Size visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
+    
+    // set background
+    Sprite* backgroundSprite = Sprite::create(BACKGROUND_FILENAME);
+    backgroundSprite->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+    this->addChild(backgroundSprite, static_cast<int>(kZOrder::kBackground), static_cast<int>(kTag::kBackground));
+    
+    // set ground
+    Sprite* backgroundGoundSprite = Sprite::create(BACKGROUND_GROUND_FILENAME);
+    backgroundGoundSprite->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 10));
+    this->addChild(backgroundGoundSprite, static_cast<int>(kZOrder::kBackground), static_cast<int>(kTag::kBackgroundGround));
 }
