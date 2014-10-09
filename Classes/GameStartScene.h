@@ -2,6 +2,7 @@
 #define __GAMESTARTSCENE_H__
 
 #include "cocos2d.h"
+#include "GroundSprite.h"
 
 class GameStartScene : public cocos2d::Layer
 {
@@ -9,6 +10,9 @@ private:
     void constructBackGround();
     
     void update(float delta);
+    
+    // ground vector
+    cocos2d::Vector<GroundSprite*> groundVector;
     
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
