@@ -1,5 +1,6 @@
 #include "GameStartScene.h"
 #include "Consts.h"
+#include "BirdSprite.h"
 
 USING_NS_CC;
 
@@ -84,6 +85,18 @@ void GameStartScene::constructBackGround() {
     auto menu = Menu::create(startItem, nullptr);
     menu->setPosition(Vec2::ZERO);
     addChild(menu);
+    
+    // add bird
+    BirdSprite* birdSprite = BirdSprite::createBird();
+    birdSprite->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+    this->addChild(birdSprite, static_cast<int>(kZOrder::kStartBird), static_cast<int>(kTag::kStartBird));
+    birdSprite->animateBirdInStartScene();
+    
+    // add flappy bird logo
+    Sprite* logo = Sprite::create(FLAPPY_BIRD_LOGO_FILENAME);
+    float logoHeight = logo->getBoundingBox().getMaxY() - logo->getBoundingBox().getMinY();
+    logo->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2 + logoHeight / 2 + 70));
+    this->addChild(logo);
 }
 
 void GameStartScene::onStartTap(cocos2d::Ref *sender) {
