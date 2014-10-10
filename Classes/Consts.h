@@ -43,6 +43,9 @@ const float BIRD_FRAME_DELAY = 0.2f;
 const float BIRD_UP_AND_DOWN_ANIMATION_HEIGHT = 10.0f;
 const float BIRD_MOVE_TIME = 0.4f;
 
+const std::string GET_READY_TEXT_FILENAME = "lv1_text_getready.png";
+const std::string EXPLANATION_FILENAME = "lv1_explanation.png";
+
 enum class BirdType {
     RED,
     BLUE,

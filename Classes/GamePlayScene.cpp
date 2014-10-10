@@ -1,17 +1,22 @@
-#include "GameStartScene.h"
-#include "Consts.h"
-#include "BirdSprite.h"
+//
+//  GamePlayScene.cpp
+//  flappy_bird
+//
+//  Created by Avirmed Munkhbat on 10/10/14.
+//
+//
+
 #include "GamePlayScene.h"
 
 USING_NS_CC;
 
-Scene* GameStartScene::createScene()
+Scene* GamePlayScene::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::create();
     
     // 'layer' is an autorelease object
-    auto layer = GameStartScene::create();
+    auto layer = GamePlayScene::create();
     
     // add layer as a child to scene
     scene->addChild(layer);
@@ -21,7 +26,7 @@ Scene* GameStartScene::createScene()
 }
 
 // on "init" you need to initialize your instance
-bool GameStartScene::init()
+bool GamePlayScene::init()
 {
     //////////////////////////////
     // 1. super init first
@@ -37,7 +42,7 @@ bool GameStartScene::init()
     return true;
 }
 
-void GameStartScene::update(float delta) {
+void GamePlayScene::update(float delta) {
     // if first ground sprite is out of screen, then change the position to right side of the second sprite.
     // and insert at the end of vector
     auto sprite = groundVector.at(0);
@@ -52,7 +57,7 @@ void GameStartScene::update(float delta) {
     }
 }
 
-void GameStartScene::constructBackGround() {
+void GamePlayScene::constructBackGround() {
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
     
@@ -74,35 +79,20 @@ void GameStartScene::constructBackGround() {
     this->addChild(backgroundGoundSprite2, static_cast<int>(kZOrder::kBackground), static_cast<int>(kTag::kBackgroundGround));
     groundVector.pushBack(backgroundGoundSprite2);
     
-    // add play button
-    MenuItemImage* startItem = MenuItemImage::create(PLAY_BUTTON_FILENAME,
-                                                     PLAY_BUTTON_FILENAME,
-                                                     CC_CALLBACK_1(GameStartScene::onStartTap, this));
-    
-    float groundTopY = backgroundGoundSprite1->getBoundingBox().getMaxY();
-    float startItemHeight = startItem->getBoundingBox().getMaxY() - startItem->getBoundingBox().getMinY();
-    startItem->setPosition(Vec2(visibleSize.width / 2, groundTopY + startItemHeight / 2));
-    
-    auto menu = Menu::create(startItem, nullptr);
-    menu->setPosition(Vec2::ZERO);
-    addChild(menu);
-    
     // add bird
     BirdSprite* birdSprite = BirdSprite::createBird();
-    birdSprite->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+    birdSprite->setPosition(Vec2(visibleSize.width / 2 - 100, visibleSize.height / 2 + 30));
     this->addChild(birdSprite, static_cast<int>(kZOrder::kStartBird), static_cast<int>(kTag::kStartBird));
     birdSprite->animateBirdInStartScene();
     
-    // add flappy bird logo
-    Sprite* logo = Sprite::create(FLAPPY_BIRD_LOGO_FILENAME);
-    float logoHeight = logo->getBoundingBox().getMaxY() - logo->getBoundingBox().getMinY();
-    logo->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2 + logoHeight / 2 + 70));
-    this->addChild(logo);
-}
-
-void GameStartScene::onStartTap(cocos2d::Ref *sender) {
-    // move to game play scene
-    Scene* gameStartScene = GamePlayScene::createScene();
-    Director::getInstance()->replaceScene(gameStartScene);
-    CCLOG("start tap");
+    // add GET Ready text
+    Sprite* getReady = Sprite::create(GET_READY_TEXT_FILENAME);
+    float logoHeight = getReady->getBoundingBox().getMaxY() - getReady->getBoundingBox().getMinY();
+    getReady->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2 + logoHeight / 2 + 130));
+    this->addChild(getReady);
+    
+    // add explanation sprite
+    Sprite* explanation = Sprite::create(EXPLANATION_FILENAME);
+    explanation->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+    this->addChild(explanation);
 }

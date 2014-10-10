@@ -1,10 +1,19 @@
-#ifndef __GAMESTARTSCENE_H__
-#define __GAMESTARTSCENE_H__
+//
+//  GamePlayScene.h
+//  flappy_bird
+//
+//  Created by Avirmed Munkhbat on 10/10/14.
+//
+//
+
+#ifndef __GAMEPLAYSCENE_H__
+#define __GAMEPLAYSCENE_H__
 
 #include "cocos2d.h"
 #include "GroundSprite.h"
+#include "BirdSprite.h"
 
-class GameStartScene : public cocos2d::Layer
+class GamePlayScene : public cocos2d::Layer
 {
 private:
     void constructBackGround();
@@ -14,9 +23,6 @@ private:
     // ground vector
     cocos2d::Vector<GroundSprite*> groundVector;
     
-    // start button tap event
-    void onStartTap(Ref* sender);
-    
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();
@@ -25,7 +31,7 @@ public:
     virtual bool init();
     
     // implement the "static create()" method manually
-    CREATE_FUNC(GameStartScene);
+    CREATE_FUNC(GamePlayScene);
 };
 
 #endif
