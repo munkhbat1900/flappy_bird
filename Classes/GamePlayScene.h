@@ -20,8 +20,23 @@ private:
     
     void update(float delta);
     
+    // game playing flag
+    bool _isGamePlay;
+    bool _isDead;
+    // game score
+    int _score;
+    
     // ground vector
-    cocos2d::Vector<GroundSprite*> groundVector;
+    cocos2d::Vector<GroundSprite*> _groundVector;
+    // touch event
+    std::function<bool(cocos2d::Touch*, cocos2d::Event*)> onTouchBegan();
+    
+    bool checkCollisionWithGround();
+    
+    bool checkCollisionWithPipe();
+    
+    // boost bird
+    void flyUpBird();
     
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer

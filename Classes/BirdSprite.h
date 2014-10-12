@@ -8,6 +8,8 @@ class BirdSprite : public cocos2d::Sprite {
 private:
     bool _isGameStart;
     BirdType _selectedBirdType;
+    void update(float delta);
+    
 public:
     BirdSprite(){}
     ~BirdSprite(){}
@@ -17,6 +19,12 @@ public:
     std::string getBirdFileName();
     
     void animateBirdInStartScene();
+    
+    bool getIsGameStart();
+    
+    void setIsGameStart(bool value);
+    
+    void flyUp();
 };
 
 #endif

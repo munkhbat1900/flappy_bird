@@ -31,8 +31,11 @@ FiniteTimeAction* BirdAnimation::birdNormalAnimation(BirdType birdType, Vec2 pos
     
     auto sequence = Sequence::create(spawn1, spawn2, NULL);
     
+    auto action = RepeatForever::create(sequence);
     
-    return RepeatForever::create(sequence);
+    action->setTag(1);
+    
+    return action;
 }
 
 std::vector<std::string> BirdAnimation::getImageFileNames(BirdType birdType) {

@@ -12,7 +12,9 @@
 enum class kTag {
     kBackground,
     kBackgroundGround,
-    kStartBird
+    kStartBird,
+    kGetReady,
+    kExplanation
 };
 
 enum class kZOrder {
@@ -45,6 +47,8 @@ const float BIRD_MOVE_TIME = 0.4f;
 
 const std::string GET_READY_TEXT_FILENAME = "lv1_text_getready.png";
 const std::string EXPLANATION_FILENAME = "lv1_explanation.png";
+
+const float BIRD_FALL_SPEED = 50.0f;
 
 enum class BirdType {
     RED,

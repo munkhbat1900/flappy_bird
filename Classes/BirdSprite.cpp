@@ -16,11 +16,25 @@ BirdSprite* BirdSprite::createBird() {
     sprite->setRandomBirdType();
     if (sprite && sprite->initWithFile(sprite->getBirdFileName())) {
         sprite->autorelease();
+        sprite->scheduleUpdate();
         return sprite;
     }
     
     CC_SAFE_DELETE(sprite);
     return nullptr;
+}
+
+void BirdSprite::update(float delta) {
+    //if game has already started bird will fall
+    if (_isGameStart) {
+        Vec2 currentPosition = this->getPosition();
+        float y = currentPosition.y - BIRD_FALL_SPEED * delta;
+        this->setPosition(currentPosition.x, y);
+    }
+}
+
+void BirdSprite::flyUp() {
+    
 }
 
 void BirdSprite::animateBirdInStartScene() {
@@ -48,4 +62,16 @@ std::string BirdSprite::getBirdFileName() {
             assert(false);
             break;
     }
+}
+
+void BirdSprite::setIsGameStart(bool value) {
+    _isGameStart = value;
+    // if game has started, stop up and down animation
+    if (value) {
+        this->stopAllActions();
+    }
+}
+
+bool BirdSprite::getIsGameStart() {
+    return _isGameStart;
 }
