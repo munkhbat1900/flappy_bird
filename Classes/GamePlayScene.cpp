@@ -13,7 +13,12 @@ USING_NS_CC;
 Scene* GamePlayScene::createScene()
 {
     // 'scene' is an autorelease object
-    auto scene = Scene::create();
+    auto scene = Scene::createWithPhysics();
+    
+    auto world = scene->getPhysicsWorld();
+    
+    world->setGravity(Vec2(0, -400));
+    world->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
     
     // 'layer' is an autorelease object
     auto layer = GamePlayScene::create();
@@ -48,40 +53,68 @@ bool GamePlayScene::init()
     eventListener->onTouchBegan = onTouchBegan();
     _eventDispatcher->addEventListenerWithSceneGraphPriority(eventListener, this);
     
+    // contact listsner.
+    auto contactListener = EventListenerPhysicsContact::create();
+    contactListener->onContactBegin = CC_CALLBACK_1(GamePlayScene::onContactBegin, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+    
+    return true;
+}
+
+bool GamePlayScene::onContactBegin( cocos2d::PhysicsContact &contact ) {
+    PhysicsBody *body1 = contact.getShapeA()->getBody();
+    PhysicsBody *body2 = contact.getShapeB()->getBody();
+    
+    CCLOG("collision detected");
+    
+    // it seems like sometimes nodes can't get Nodes.
+    if (body1 == nullptr || body2 == nullptr) {
+        return true;
+    }
+    
+    auto tag1 = body1->getTag();
+    auto tag2 = body2->getTag();
+    
+    int tagBirdGround = static_cast<int>(PhysicsBodyTag::BIRD) + static_cast<int>(PhysicsBodyTag::GROUND);
+    
+    if (tag1 + tag2 == tagBirdGround) {
+        _isDead = true;
+        CCLOG("dead");
+    }
     return true;
 }
 
 std::function<bool(cocos2d::Touch*, cocos2d::Event*)> GamePlayScene::onTouchBegan() {
     return [&](cocos2d::Touch* touch, cocos2d::Event* event) {
         //delete unnecessary sprites
-        if (!_isGamePlay) {
+        if (!_isGamePlay && !_isDead) {
             Node* explanation = this->getChildByTag(static_cast<int>(kTag::kExplanation));
             Node* getReady = this->getChildByTag(static_cast<int>(kTag::kGetReady));
             
             explanation->removeFromParentAndCleanup(true);
             getReady->removeFromParentAndCleanup(true);
             
-            CCLOG("haha");
-            // get bird sprite
-            BirdSprite* birdSprite = (BirdSprite*)this->getChildByTag(static_cast<int>(kTag::kStartBird));
-            birdSprite->setIsGameStart(true);
+            _birdSprite->setIsGameStart(true);
             _isGamePlay = true;
             _isDead = false;
-            flyUpBird();
+            
+            // set rigid body to sprite
+            auto material = PHYSICSBODY_MATERIAL_DEFAULT;
+            material.restitution = 0.0f;
+            material.friction = 0.0f;
+            auto body = PhysicsBody::createBox(_birdSprite->getContentSize(), material);
+            body->setContactTestBitmask(BIRD_COLLISION_MASK);
+            body->setGravityEnable(true);
+            body->setTag(static_cast<int>(PhysicsBodyTag::BIRD));
+            _birdSprite->setPhysicsBody(body);
+            
             return true;
         } else if (!_isDead) {
-            flyUpBird();
             return false;
         } else {
             return false;
         }
     };
-}
-
-void GamePlayScene::flyUpBird() {
-    // get bird sprite
-    BirdSprite* birdSprite = (BirdSprite*)this->getChildByTag(static_cast<int>(kTag::kStartBird));
-    
 }
 
 void GamePlayScene::update(float delta) {
@@ -97,32 +130,51 @@ void GamePlayScene::update(float delta) {
         _groundVector.erase(0);
         _groundVector.pushBack(sprite);
     }
-    
+
     // is game playing
     if (_isGamePlay) {
-        // check collision with ground.
-        if (checkCollisionWithGround()) {
-            //dead
-            _isGamePlay = false;
-            BirdSprite* birdSprite = (BirdSprite*)this->getChildByTag(static_cast<int>(kTag::kStartBird));
-            birdSprite->setIsGameStart(false);
-            CCLOG("dead");
-            _isDead = true;
-        }
+        //_birdSprite->fall();
     }
 }
 
-bool GamePlayScene::checkCollisionWithGround() {
-    // get bird sprite
-    BirdSprite* birdSprite = (BirdSprite*)this->getChildByTag(static_cast<int>(kTag::kStartBird));
-    float minY = birdSprite->getBoundingBox().getMinY();
-    // compute ground top y-coordinate.
-    float maxY = _groundVector.at(0)->getBoundingBox().getMaxY();
-    if (minY <= maxY) {
-        return true;
-    } else {
-        return false;
-    }
+void GamePlayScene::createGround() {
+    Size visibleSize = Director::getInstance()->getVisibleSize();
+    // set ground sprites
+    GroundSprite* goundSprite1 = GroundSprite::createGround();
+    goundSprite1->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 10));
+    this->addChild(goundSprite1, static_cast<int>(kZOrder::kBackground), static_cast<int>(kTag::kBackgroundGround));
+    _groundVector.pushBack(goundSprite1);
+    
+    // set physics to grounds
+    
+    auto material = PHYSICSBODY_MATERIAL_DEFAULT;
+    material.restitution = 0.0f;
+    material.friction = 0.0f;
+    
+    //auto body1 = PhysicsBody::createBox(goundSprite1->getContentSize());
+    auto body1 = PhysicsBody::createBox(goundSprite1->getContentSize(), material);
+    goundSprite1->setPhysicsBody(body1);
+    body1->setGravityEnable(false);
+    body1->setContactTestBitmask(OBSTACLE_COLLISION_MASK);
+    body1->setContactTestBitmask(true);
+    body1->setDynamic(false);
+    body1->setTag(static_cast<int>(PhysicsBodyTag::GROUND));
+    
+    float rightEdgeX = goundSprite1->getBoundingBox().getMaxX();  // right end of first ground sprite
+    
+    GroundSprite* groundSprite2 = GroundSprite::createGround();
+    groundSprite2->setPosition(Vec2(rightEdgeX + visibleSize.width / 2, visibleSize.height / 10));
+    this->addChild(groundSprite2, static_cast<int>(kZOrder::kBackground), static_cast<int>(kTag::kBackgroundGround));
+    _groundVector.pushBack(groundSprite2);
+    
+    //auto body2 = PhysicsBody::createBox(groundSprite2->getContentSize());
+    auto body2 = PhysicsBody::createBox(groundSprite2->getContentSize(), material);
+    groundSprite2->setPhysicsBody(body2);
+    body2->setGravityEnable(false);
+    body2->setContactTestBitmask(OBSTACLE_COLLISION_MASK);
+    body2->setContactTestBitmask(true);
+    body2->setDynamic(false);
+    body2->setTag(static_cast<int>(PhysicsBodyTag::GROUND));
 }
 
 void GamePlayScene::constructBackGround() {
@@ -134,24 +186,13 @@ void GamePlayScene::constructBackGround() {
     backgroundSprite->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
     this->addChild(backgroundSprite, static_cast<int>(kZOrder::kBackground), static_cast<int>(kTag::kBackground));
     
-    // set ground sprites
-    GroundSprite* backgroundGoundSprite1 = GroundSprite::createGround();
-    backgroundGoundSprite1->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 10));
-    this->addChild(backgroundGoundSprite1, static_cast<int>(kZOrder::kBackground), static_cast<int>(kTag::kBackgroundGround));
-    _groundVector.pushBack(backgroundGoundSprite1);
-    
-    float rightEdgeX = backgroundGoundSprite1->getBoundingBox().getMaxX();  // right end of first ground sprite
-    
-    GroundSprite* backgroundGoundSprite2 = GroundSprite::createGround();
-    backgroundGoundSprite2->setPosition(Vec2(rightEdgeX + visibleSize.width / 2, visibleSize.height / 10));
-    this->addChild(backgroundGoundSprite2, static_cast<int>(kZOrder::kBackground), static_cast<int>(kTag::kBackgroundGround));
-    _groundVector.pushBack(backgroundGoundSprite2);
+    createGround();
     
     // add bird
-    BirdSprite* birdSprite = BirdSprite::createBird();
-    birdSprite->setPosition(Vec2(visibleSize.width / 2 - 100, visibleSize.height / 2 + 30));
-    this->addChild(birdSprite, static_cast<int>(kZOrder::kStartBird), static_cast<int>(kTag::kStartBird));
-    birdSprite->animateBirdInStartScene();
+    _birdSprite = BirdSprite::createBird();
+    _birdSprite->setPosition(Vec2(visibleSize.width / 2 - 100, visibleSize.height / 2 + 30));
+    this->addChild(_birdSprite, static_cast<int>(kZOrder::kStartBird), static_cast<int>(kTag::kStartBird));
+    _birdSprite->animateBirdInStartScene();
     
     // add GET Ready text
     Sprite* getReady = Sprite::create(GET_READY_TEXT_FILENAME);

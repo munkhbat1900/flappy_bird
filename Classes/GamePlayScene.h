@@ -18,25 +18,22 @@ class GamePlayScene : public cocos2d::Layer
 private:
     void constructBackGround();
     
-    void update(float delta);
-    
     // game playing flag
     bool _isGamePlay;
     bool _isDead;
     // game score
     int _score;
+    BirdSprite* _birdSprite;
     
     // ground vector
     cocos2d::Vector<GroundSprite*> _groundVector;
     // touch event
     std::function<bool(cocos2d::Touch*, cocos2d::Event*)> onTouchBegan();
     
-    bool checkCollisionWithGround();
+    void update(float delta);
     
-    bool checkCollisionWithPipe();
-    
-    // boost bird
-    void flyUpBird();
+    void createGround();
+    bool onContactBegin( cocos2d::PhysicsContact &contact );
     
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer

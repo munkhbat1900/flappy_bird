@@ -33,10 +33,20 @@ FiniteTimeAction* BirdAnimation::birdNormalAnimation(BirdType birdType, Vec2 pos
     
     auto action = RepeatForever::create(sequence);
     
-    action->setTag(1);
+    action->setTag(static_cast<int>(BirdActionTag::NORMAL));
     
     return action;
 }
+
+FiniteTimeAction* BirdAnimation::birdRotateDownAnimation() {
+    auto rotateAction = RotateTo::create(0.5f, 90);
+    rotateAction->setTag(static_cast<int>(BirdActionTag::FALLING));
+    return rotateAction;
+}
+
+//FiniteTimeAction* BirdAnimation::birdFlyUpAnimation(BirdType birdType, cocos2d::Vec2 position) {
+    
+//}
 
 std::vector<std::string> BirdAnimation::getImageFileNames(BirdType birdType) {
     std::vector<std::string> imageFiles;

@@ -9,6 +9,7 @@ private:
     bool _isGameStart;
     BirdType _selectedBirdType;
     void update(float delta);
+    bool _isFlyingUp;
     
 public:
     BirdSprite(){}
@@ -25,6 +26,8 @@ public:
     void setIsGameStart(bool value);
     
     void flyUp();
+    
+    void fall();
 };
 
 #endif

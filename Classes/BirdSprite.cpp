@@ -25,16 +25,23 @@ BirdSprite* BirdSprite::createBird() {
 }
 
 void BirdSprite::update(float delta) {
-    //if game has already started bird will fall
-    if (_isGameStart) {
-        Vec2 currentPosition = this->getPosition();
-        float y = currentPosition.y - BIRD_FALL_SPEED * delta;
-        this->setPosition(currentPosition.x, y);
-    }
+//    //if game has already started bird will fall
+//    if (_isGameStart && !_isFlyingUp) {
+//        auto rotateAction = BirdAnimation::birdRotateDownAnimation();
+//        this->runAction(rotateAction);
+//    }
 }
 
 void BirdSprite::flyUp() {
-    
+    _isFlyingUp = true;
+}
+
+void BirdSprite::fall() {
+    if (!_isFlyingUp) {
+        this->setPositionY(this->getPositionY() - BIRD_FALL_SPEED);
+    } else {
+        this->setPositionY(this->getPositionY() + BIRD_FALL_SPEED);
+    }
 }
 
 void BirdSprite::animateBirdInStartScene() {

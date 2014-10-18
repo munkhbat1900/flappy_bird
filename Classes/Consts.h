@@ -49,6 +49,19 @@ const std::string GET_READY_TEXT_FILENAME = "lv1_text_getready.png";
 const std::string EXPLANATION_FILENAME = "lv1_explanation.png";
 
 const float BIRD_FALL_SPEED = 50.0f;
+//const float GRAVITATION = 9.8f;
+const float ACCELERATION_BIRD = 5.0f;
+const float BIRD_FLY_UP_FIRST_SPEED = 10.0f;
+
+const int BIRD_COLLISION_MASK = 0x1;
+const int OBSTACLE_COLLISION_MASK = 0x2;
+const int POINT_COLLISION_MASK = 0x3;
+
+enum class PhysicsBodyTag {
+    GROUND = 1,
+    PIPE = 10,
+    BIRD = 20
+};
 
 enum class BirdType {
     RED,
@@ -58,6 +71,12 @@ enum class BirdType {
 };
 
 enum class BirdState {
+    NORMAL,
+    FLY,
+    FALLING
+};
+
+enum class BirdActionTag {
     NORMAL,
     FLY,
     FALLING
