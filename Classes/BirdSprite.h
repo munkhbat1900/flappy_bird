@@ -6,9 +6,7 @@
 
 class BirdSprite : public cocos2d::Sprite {
 private:
-    bool _isGameStart;
     BirdType _selectedBirdType;
-    void update(float delta);
     bool _isFlyingUp;
     
 public:
@@ -21,13 +19,13 @@ public:
     
     void animateBirdInStartScene();
     
-    bool getIsGameStart();
-    
-    void setIsGameStart(bool value);
+    void gameStart();
     
     void flyUp();
     
-    void fall();
+    void stopFlying();
+    
+    void swingAnimation();
 };
 
 #endif

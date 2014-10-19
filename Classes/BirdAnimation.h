@@ -11,14 +11,14 @@
 
 #include "cocos2d.h"
 #include "Consts.h"
+#include "BirdSprite.h"
 
 class BirdAnimation {
 public:
     static cocos2d::FiniteTimeAction* birdNormalAnimation(BirdType birdType, cocos2d::Vec2 position);
     static std::vector<std::string> getImageFileNames(BirdType birdType);
-    // flying to upper animation
-    //static cocos2d::FiniteTimeAction* birdFlyUpAnimation(BirdType birdType, cocos2d::Vec2 position);
-    static cocos2d::FiniteTimeAction* birdRotateDownAnimation();
+    
+    static cocos2d::FiniteTimeAction* birdSwingAnimation(BirdType birdType);
 };
 
 #endif

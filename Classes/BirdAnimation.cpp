@@ -13,7 +13,7 @@ USING_NS_CC;
 FiniteTimeAction* BirdAnimation::birdNormalAnimation(BirdType birdType, Vec2 position) {
     std::vector<std::string> imageFileNames = BirdAnimation::getImageFileNames(birdType);
     
-    // flying wings animation
+    // swing animation
     Animation *animation = Animation::create();
     for (std::string fileName : imageFileNames) {
         // should check if this method use cache.
@@ -38,15 +38,17 @@ FiniteTimeAction* BirdAnimation::birdNormalAnimation(BirdType birdType, Vec2 pos
     return action;
 }
 
-FiniteTimeAction* BirdAnimation::birdRotateDownAnimation() {
-    auto rotateAction = RotateTo::create(0.5f, 90);
-    rotateAction->setTag(static_cast<int>(BirdActionTag::FALLING));
-    return rotateAction;
+FiniteTimeAction* BirdAnimation::birdSwingAnimation(BirdType birdType) {
+    std::vector<std::string> imageFileNames = BirdAnimation::getImageFileNames(birdType);
+    // swing animation
+    Animation *animation = Animation::create();
+    for (std::string fileName : imageFileNames) {
+        // should check if this method use cache.
+        animation->addSpriteFrameWithFile(fileName);
+    }
+    animation->setDelayPerUnit(BIRD_FRAME_DELAY / 2 );
+    return RepeatForever::create(Animate::create(animation));
 }
-
-//FiniteTimeAction* BirdAnimation::birdFlyUpAnimation(BirdType birdType, cocos2d::Vec2 position) {
-    
-//}
 
 std::vector<std::string> BirdAnimation::getImageFileNames(BirdType birdType) {
     std::vector<std::string> imageFiles;

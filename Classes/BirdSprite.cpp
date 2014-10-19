@@ -24,28 +24,21 @@ BirdSprite* BirdSprite::createBird() {
     return nullptr;
 }
 
-void BirdSprite::update(float delta) {
-//    //if game has already started bird will fall
-//    if (_isGameStart && !_isFlyingUp) {
-//        auto rotateAction = BirdAnimation::birdRotateDownAnimation();
-//        this->runAction(rotateAction);
-//    }
-}
-
 void BirdSprite::flyUp() {
     _isFlyingUp = true;
 }
 
-void BirdSprite::fall() {
-    if (!_isFlyingUp) {
-        this->setPositionY(this->getPositionY() - BIRD_FALL_SPEED);
-    } else {
-        this->setPositionY(this->getPositionY() + BIRD_FALL_SPEED);
-    }
+void BirdSprite::stopFlying() {
+    _isFlyingUp = false;
 }
 
 void BirdSprite::animateBirdInStartScene() {
     auto action = BirdAnimation::birdNormalAnimation(_selectedBirdType, this->getPosition());
+    this->runAction(action);
+}
+
+void BirdSprite::swingAnimation() {
+    auto action = BirdAnimation::birdSwingAnimation(_selectedBirdType);
     this->runAction(action);
 }
 
@@ -71,14 +64,7 @@ std::string BirdSprite::getBirdFileName() {
     }
 }
 
-void BirdSprite::setIsGameStart(bool value) {
-    _isGameStart = value;
+void BirdSprite::gameStart() {
     // if game has started, stop up and down animation
-    if (value) {
-        this->stopAllActions();
-    }
-}
-
-bool BirdSprite::getIsGameStart() {
-    return _isGameStart;
+    this->stopAllActions();
 }

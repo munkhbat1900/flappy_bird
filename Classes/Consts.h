@@ -40,18 +40,16 @@ const std::string YELLOW_BIRD_FLYUP = "lv1_bird_flyup.png";
 const std::string YELLOW_BIRD_FLYDOWN = "lv1_bird_flydown.png";
 
 const std::string FLAPPY_BIRD_LOGO_FILENAME = "lv1_logo.png";
+const std::string GET_READY_TEXT_FILENAME = "lv1_text_getready.png";
+const std::string EXPLANATION_FILENAME = "lv1_explanation.png";
+
 
 const float BIRD_FRAME_DELAY = 0.2f;
 const float BIRD_UP_AND_DOWN_ANIMATION_HEIGHT = 10.0f;
 const float BIRD_MOVE_TIME = 0.4f;
 
-const std::string GET_READY_TEXT_FILENAME = "lv1_text_getready.png";
-const std::string EXPLANATION_FILENAME = "lv1_explanation.png";
-
-const float BIRD_FALL_SPEED = 50.0f;
-//const float GRAVITATION = 9.8f;
-const float ACCELERATION_BIRD = 5.0f;
-const float BIRD_FLY_UP_FIRST_SPEED = 10.0f;
+const float BIRD_FLY_SPEED = 240.0f;
+const float BIRD_FLY_TIME = 0.05f;
 
 const int BIRD_COLLISION_MASK = 0x1;
 const int OBSTACLE_COLLISION_MASK = 0x2;

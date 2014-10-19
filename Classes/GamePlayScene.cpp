@@ -17,8 +17,8 @@ Scene* GamePlayScene::createScene()
     
     auto world = scene->getPhysicsWorld();
     
-    world->setGravity(Vec2(0, -400));
-    world->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    world->setGravity(Vec2(0, -900));
+    //world->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
     
     // 'layer' is an autorelease object
     auto layer = GamePlayScene::create();
@@ -104,17 +104,36 @@ std::function<bool(cocos2d::Touch*, cocos2d::Event*)> GamePlayScene::onTouchBega
             material.friction = 0.0f;
             auto body = PhysicsBody::createBox(_birdSprite->getContentSize(), material);
             body->setContactTestBitmask(BIRD_COLLISION_MASK);
-            body->setGravityEnable(true);
             body->setTag(static_cast<int>(PhysicsBodyTag::BIRD));
             _birdSprite->setPhysicsBody(body);
             
+            body->setGravityEnable(false);
+            _birdSprite->getPhysicsBody()->setVelocity(Vec2(0, BIRD_FLY_SPEED));
+            
+            this->scheduleOnce(schedule_selector(GamePlayScene::stopFlying), BIRD_FLY_TIME);
+            _birdSprite->flyUp();
+            _birdSprite->swingAnimation();
             return true;
         } else if (!_isDead) {
-            return false;
+            _birdSprite->getPhysicsBody()->setGravityEnable(false);
+            _birdSprite->getPhysicsBody()->setVelocity(Vec2(0, BIRD_FLY_SPEED));
+            this->scheduleOnce(schedule_selector(GamePlayScene::stopFlying), BIRD_FLY_TIME);
+            _birdSprite->flyUp();
+            return true;
         } else {
             return false;
         }
     };
+}
+
+void GamePlayScene::stopFlying(float delta) {
+    _birdSprite->getPhysicsBody()->setGravityEnable(true);
+    _birdSprite->stopFlying();
+}
+
+void GamePlayScene::rotateBird() {
+    float velocity = _birdSprite->getPhysicsBody()->getVelocity().y;
+    _birdSprite->setRotation(MIN(MAX(-45, (-velocity*0.1)), 90));
 }
 
 void GamePlayScene::update(float delta) {
@@ -130,10 +149,9 @@ void GamePlayScene::update(float delta) {
         _groundVector.erase(0);
         _groundVector.pushBack(sprite);
     }
-
-    // is game playing
+    
     if (_isGamePlay) {
-        //_birdSprite->fall();
+        rotateBird();
     }
 }
 

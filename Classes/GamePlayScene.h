@@ -34,6 +34,9 @@ private:
     
     void createGround();
     bool onContactBegin( cocos2d::PhysicsContact &contact );
+    void stopFlying(float delta);
+    
+    void rotateBird();
     
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
