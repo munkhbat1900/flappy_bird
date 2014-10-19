@@ -94,7 +94,7 @@ std::function<bool(cocos2d::Touch*, cocos2d::Event*)> GamePlayScene::onTouchBega
             explanation->removeFromParentAndCleanup(true);
             getReady->removeFromParentAndCleanup(true);
             
-            _birdSprite->setIsGameStart(true);
+            _birdSprite->gameStart();
             _isGamePlay = true;
             _isDead = false;
             
@@ -111,14 +111,12 @@ std::function<bool(cocos2d::Touch*, cocos2d::Event*)> GamePlayScene::onTouchBega
             _birdSprite->getPhysicsBody()->setVelocity(Vec2(0, BIRD_FLY_SPEED));
             
             this->scheduleOnce(schedule_selector(GamePlayScene::stopFlying), BIRD_FLY_TIME);
-            _birdSprite->flyUp();
             _birdSprite->swingAnimation();
             return true;
         } else if (!_isDead) {
             _birdSprite->getPhysicsBody()->setGravityEnable(false);
             _birdSprite->getPhysicsBody()->setVelocity(Vec2(0, BIRD_FLY_SPEED));
             this->scheduleOnce(schedule_selector(GamePlayScene::stopFlying), BIRD_FLY_TIME);
-            _birdSprite->flyUp();
             return true;
         } else {
             return false;
@@ -128,7 +126,6 @@ std::function<bool(cocos2d::Touch*, cocos2d::Event*)> GamePlayScene::onTouchBega
 
 void GamePlayScene::stopFlying(float delta) {
     _birdSprite->getPhysicsBody()->setGravityEnable(true);
-    _birdSprite->stopFlying();
 }
 
 void GamePlayScene::rotateBird() {

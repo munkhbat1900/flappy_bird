@@ -24,14 +24,6 @@ BirdSprite* BirdSprite::createBird() {
     return nullptr;
 }
 
-void BirdSprite::flyUp() {
-    _isFlyingUp = true;
-}
-
-void BirdSprite::stopFlying() {
-    _isFlyingUp = false;
-}
-
 void BirdSprite::animateBirdInStartScene() {
     auto action = BirdAnimation::birdNormalAnimation(_selectedBirdType, this->getPosition());
     this->runAction(action);

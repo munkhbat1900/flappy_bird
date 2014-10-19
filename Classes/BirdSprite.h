@@ -21,10 +21,6 @@ public:
     
     void gameStart();
     
-    void flyUp();
-    
-    void stopFlying();
-    
     void swingAnimation();
 };
 
