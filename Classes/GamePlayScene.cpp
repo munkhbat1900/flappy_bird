@@ -65,8 +65,6 @@ bool GamePlayScene::onContactBegin( cocos2d::PhysicsContact &contact ) {
     PhysicsBody *body1 = contact.getShapeA()->getBody();
     PhysicsBody *body2 = contact.getShapeB()->getBody();
     
-    CCLOG("collision detected");
-    
     // it seems like sometimes nodes can't get Nodes.
     if (body1 == nullptr || body2 == nullptr) {
         return true;
@@ -82,6 +80,12 @@ bool GamePlayScene::onContactBegin( cocos2d::PhysicsContact &contact ) {
         CCLOG("dead");
     }
     return true;
+}
+
+void GamePlayScene::createPipes() {
+    for (int i = 0; i < PIPE_COUNT_SHOWN; i++) {
+        
+    }
 }
 
 std::function<bool(cocos2d::Touch*, cocos2d::Event*)> GamePlayScene::onTouchBegan() {
